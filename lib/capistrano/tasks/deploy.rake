@@ -39,6 +39,7 @@ namespace :deploy do
     invoke 'magento:setup:db:data:upgrade'
 
     if fetch(:magento_deploy_production)
+      invoke "magento:setup:upgrade"
       invoke 'magento:setup:static-content:deploy'
       invoke 'magento:setup:di:compile'
     end
