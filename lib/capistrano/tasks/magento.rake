@@ -1,11 +1,11 @@
 ##
- # Copyright © 2016 by David Alger. All rights reserved
- #
- # Licensed under the Open Software License 3.0 (OSL-3.0)
- # See included LICENSE file for full text of OSL-3.0
- #
- # http://davidalger.com/contact/
- ##
+# Copyright © 2016 by David Alger. All rights reserved
+#
+# Licensed under the Open Software License 3.0 (OSL-3.0)
+# See included LICENSE file for full text of OSL-3.0
+#
+# http://davidalger.com/contact/
+##
 
 include Capistrano::Magento2::Helpers
 include Capistrano::Magento2::Setup
@@ -149,7 +149,7 @@ namespace :magento do
               exit((int)!isset($cfg["install"]["date"]));
           ']
           error "\e[0;31mError on #{host}:\e[0m No environment configuration could be found." +
-                " Please configure app/etc/env.php and retry!"
+          " Please configure app/etc/env.php and retry!"
           is_err = true
         end
       end
@@ -163,7 +163,7 @@ namespace :magento do
       on primary fetch(:magento_deploy_setup_role) do
         within release_path do
           warn "\e[0;31mWarning: Use of magento:setup:upgrade on production systems is discouraged." +
-               " See https://github.com/davidalger/capistrano-magento2/issues/34 for details.\e[0m\n"
+            " See https://github.com/davidalger/capistrano-magento2/issues/34 for details.\e[0m\n"
 
           execute :magento, 'setup:upgrade --keep-generated'
         end
@@ -240,13 +240,11 @@ namespace :magento do
             else
               output = capture :magento, 'setup:di:compile --no-ansi', verbosity: Logger::INFO
             end
-            
+
             # 2.0.x never returns a non-zero exit code for errors, so manually check string
             # 2.1.x doesn't return a non-zero exit code for certain errors (see davidalger/capistrano-magento2#41)
             if output.to_s.include? 'Errors during compilation'
               raise Exception, 'DI compilation command execution failed'
-else
-              execute :magento, 'setup:di:compile'
             end
           end
         end

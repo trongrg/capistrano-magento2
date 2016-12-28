@@ -35,12 +35,21 @@ namespace :deploy do
       end
     end
 
-    invoke 'magento:setup:db:schema:upgrade'
-    invoke 'magento:setup:db:data:upgrade'
+    unless fetch(:magento_deploy_production)
+      invoke 'magento:setup:db:schema:upgrade'
+      invoke 'magento:setup:db:data:upgrade'
+    end
 
     if fetch(:magento_deploy_production)
       invoke "magento:setup:upgrade"
       invoke 'magento:setup:static-content:deploy'
+      Rake::Task["magento:cache:flush"].reenable
+      invoke 'magento:cache:flush'
+      on release_roles :all do
+        within release_path do
+          execute "rm -rf var/*"
+        end
+      end
       invoke 'magento:setup:di:compile'
     end
 
