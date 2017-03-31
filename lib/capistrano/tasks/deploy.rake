@@ -42,7 +42,6 @@ namespace :deploy do
 
     if fetch(:magento_deploy_production)
       invoke "magento:setup:upgrade"
-      invoke 'magento:setup:static-content:deploy'
       Rake::Task["magento:cache:flush"].reenable
       invoke 'magento:cache:flush'
       on release_roles :all do
@@ -51,6 +50,7 @@ namespace :deploy do
         end
       end
       invoke 'magento:setup:di:compile'
+      invoke 'magento:setup:static-content:deploy'
     end
 
     on primary fetch(:magento_deploy_setup_role) do
