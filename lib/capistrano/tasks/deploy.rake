@@ -67,6 +67,7 @@ namespace :deploy do
   end
 
   task :published do
+    Rake::Task["magento:cache:flush"].reenable
     invoke 'magento:cache:flush'
     invoke 'magento:cache:varnish:ban'
     invoke 'magento:maintenance:disable' if fetch(:magento_deploy_maintenance)
